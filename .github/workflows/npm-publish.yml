@@ -29,6 +29,8 @@ jobs:
         run: yarn typescript
       - name: Tests
         run: yarn test
+        env:
+          NODE_NPM_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   publish-gpr:
     needs: build

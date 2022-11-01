@@ -1,18 +1,49 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from '@mcctomsk/react-native-matomo';
+import { StyleSheet, Text, View } from 'react-native';
+import {
+  initialize,
+  isInitialized,
+  setCustomDimension,
+  setUserId,
+  trackEvent,
+  trackView,
+} from '@mcctomsk/react-native-matomo';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [isInit, setInit] = React.useState<boolean>(false);
+  const [isInitModule, setInitModule] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+    initialize('https://example.com/piwik.php', 1)
+      .catch((error) => console.warn('Failed to initialize matomo', error))
+      .then(() => setUserId('UniqueUserId'))
+      .then(() => setCustomDimension(1, '1.0.0'))
+      .then(() => {
+        setInit(true);
+        trackEvent('Application', 'Startup').catch((error: any) =>
+          console.warn('Failed to track event', error)
+        );
+
+        trackView('/start', 'Start screen title').catch((error: any) =>
+          console.warn('Failed to track screen', error)
+        );
+      });
+  }, []);
+
+  React.useEffect(() => {
+    const asyncMethod = async () => {
+      const result = await isInitialized();
+      setInitModule(result);
+    };
+
+    asyncMethod();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Matomo init (local): {isInit}</Text>
+      <Text>Matomo init (module): {isInitModule}</Text>
     </View>
   );
 }

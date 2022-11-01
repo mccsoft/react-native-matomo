@@ -130,7 +130,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "jestSetup.js"
   ],
   "prettier": {
     "quoteProps": "consistent",

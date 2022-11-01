@@ -23,7 +23,7 @@ class ReactNativeMatomo: NSObject {
 
     @objc(trackView:resolver:rejecter:)
     func trackView(
-        route: Array<String>,
+        route: String,
         resolver: RCTPromiseResolveBlock,
         rejecter: RCTPromiseRejectBlock
     ) -> Void {

@@ -11,7 +11,7 @@ RCT_EXTERN_METHOD(initialize:(nonnull NSString *)apiUrl
                   resolver:(RCTPromiseResolveBlock)resolver
                   rejecter:(RCTPromiseRejectBlock)rejecter
                   )
-RCT_EXTERN_METHOD(trackView:(nonnull NSArray *)route
+RCT_EXTERN_METHOD(trackView:(nonnull NSString *)route
                   resolver:(RCTPromiseResolveBlock)resolver
                   rejecter:(RCTPromiseRejectBlock)rejecter
                   )

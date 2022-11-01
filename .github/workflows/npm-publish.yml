@@ -39,7 +39,7 @@ jobs:
       - name: 🟢 node
         uses: actions/setup-node@v3
       - name: Install dependencies
-          run: |
-            yarn install --cwd example --frozen-lockfile
-            yarn install --frozen-lockfile
+        run: |
+          yarn install --cwd example --frozen-lockfile
+          yarn install --frozen-lockfile
       - run: yarn prepare

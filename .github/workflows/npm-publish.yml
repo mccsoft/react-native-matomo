@@ -18,9 +18,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: https://registry.npmjs.org
-          env:
-            NODE_NPM_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+        env:
+          NODE_NPM_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
       - name: Install dependencies
         run: |
           yarn install --cwd example --frozen-lockfile

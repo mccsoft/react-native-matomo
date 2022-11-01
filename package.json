@@ -50,6 +50,7 @@
   },
   "homepage": "https://github.com/mcctomsk/react-native-matomo#readme",
   "publishConfig": {
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {

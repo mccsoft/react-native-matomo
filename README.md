@@ -16,7 +16,7 @@ npm install @mcctomsk/react-native-matomo
 yarn add @mcctomsk/react-native-matomo
 ```
 
-#### iOS :iphone: _Extra steps_
+#### :iphone:iOS (_Extra steps_)
 
 ```bash
 cd ios/

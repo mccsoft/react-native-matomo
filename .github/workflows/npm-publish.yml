@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - master
-  release:
-    types: [published]
 
 jobs:
   build:
@@ -21,41 +19,29 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org
-      - run:
-          name: Install dependencies
-          command: |
-            yarn install --cwd example --frozen-lockfile
-            yarn install --frozen-lockfile
+      - run: |
+          yarn install --cwd example --frozen-lockfile
+          yarn install --frozen-lockfile
   lint:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - run:
-          name: Lint files
-          command: |
-            yarn lint
+      - run: yarn lint
 
   typescript:
     needs: build
+    runs-on: ubuntu-latest
     steps:
-      - run:
-          name: Typecheck files
-          command: |
-            yarn typescript
+      - run: yarn typescript
 
   unit-tests:
     needs: build
+    runs-on: ubuntu-latest
     steps:
-      - run:
-          name: Run unit tests
-          command: |
-            yarn test
+      - run: yarn test
 
   build-package:
     needs: build
+    runs-on: ubuntu-latest
     steps:
-      - attach_project
-      - run:
-          name: Build package
-          command: |
-            yarn prepare
+      - run: yarn prepare

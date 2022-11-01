@@ -61,12 +61,12 @@ jobs:
         with:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
-          scope: '@mcctomsk'
       - name: Install dependencies
         run: |
           yarn install --cwd example --frozen-lockfile
           yarn install --frozen-lockfile
       - run: yarn prepare
+      - run: npm login --registry=https://npm.pkg.github.com --scope=@mcctomsk
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}

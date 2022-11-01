@@ -1,4 +1,4 @@
-package com.mcctomskreactnativematomo;
+package com.mcctomsk.reactnativematomo;
 
 import androidx.annotation.NonNull;
 

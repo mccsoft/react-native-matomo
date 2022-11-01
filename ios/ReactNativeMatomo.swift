@@ -1,8 +1,92 @@
+import Foundation
+import MatomoTracker
+
 @objc(ReactNativeMatomo)
 class ReactNativeMatomo: NSObject {
 
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
-  }
+ var tracker:MatomoTracker?
+
+    @objc static func requiresMainQueueSetup() -> Bool {
+        return false
+    }
+
+    @objc(initialize:siteId:resolver:rejecter:)
+    func initialize(
+        apiUrl: String,
+        siteId: NSNumber,
+        resolver: RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) -> Void {
+        tracker = MatomoTracker(siteId: siteId.stringValue, baseURL: URL(string: apiUrl)!)
+        resolver(nil)
+    }
+
+    @objc(trackView:resolver:rejecter:)
+    func trackView(
+        route: String,
+        resolver: RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) -> Void {
+        if let tracker = tracker {
+            tracker.track(view: route)
+            resolver(nil)
+        } else {
+            rejecter("not_initialized", "The tracker has not been initialized", NSError())
+        }
+    }
+
+    @objc(trackEvent:action:optionalParameters:resolver:rejecter:)
+    func trackEvent(
+        category: String,
+        action: String,
+        optionalParameters: NSDictionary,
+        resolver: RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) -> Void {
+        if let tracker = tracker {
+            tracker.track(eventWithCategory: category,
+                          action: action,
+                          name: optionalParameters.value(forKey:"name") as? String,
+                          number: optionalParameters.value(forKey:"value") as? NSNumber,
+                          url: nil
+            )
+            resolver(nil)
+        } else {
+            rejecter("not_initialized", "The tracker has not been initialized", NSError())
+        }
+    }
+
+    @objc(setUserId:resolver:rejecter:)
+    func setUserId(
+        userId: String,
+        resolver: RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) -> Void {
+        if let tracker = tracker {
+            tracker.userId = userId
+            resolver(nil)
+        } else {
+            rejecter("not_initialize", "The tracker has not been initialized", NSError())
+        }
+    }
+
+    @objc(setCustomDimension:value:resolver:rejecter:)
+    func setCustomDimension(
+        dimensionId: NSNumber,
+        value: String?,
+        resolver: RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) -> Void {
+        guard let tracker = tracker else {
+            rejecter("not_initialized", "The tracker has not been initialized", NSError())
+            return
+        }
+        let id = dimensionId.intValue
+        if let value = value {
+            tracker.setDimension(value, forIndex: id)
+        } else {
+            tracker.remove(dimensionAtIndex: id)
+        }
+        resolver(nil)
+    }
 }

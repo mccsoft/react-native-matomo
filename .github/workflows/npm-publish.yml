@@ -23,28 +23,24 @@ jobs:
         run: |
           yarn install --cwd example --frozen-lockfile
           yarn install --frozen-lockfile
-  lint:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: yarn lint
-
-  typescript:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - run: yarn typescript
-
-  unit-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - run: yarn test
+      - name: Lint
+        run: yarn lint
+      - name: Typecheck
+        run: yarn typescript
+      - name: Tests
+        run: yarn test
 
   build-package:
-    needs: [lint, typescript, unit-tests]
+    needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: 📚 checkout
+        uses: actions/checkout@v3
+      - name: 🟢 node
+        uses: actions/setup-node@v3
+      - name: Install Deps
+        uses: mskelton/setup-yarn@v1.2.1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
       - run: yarn prepare

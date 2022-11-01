@@ -6,14 +6,18 @@ Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for nati
 npm install @mcctomsk/react-native-matomo
 ```
 
+```sh
+yarn add @mcctomsk/react-native-matomo
+```
+
 ## Usage
 
 ```js
-import { multiply } from "@mcctomsk/react-native-matomo";
+import { MatomoProvider, MatoomoTracker } from "@mcctomsk/react-native-matomo";
 
 // ...
 
-const result = await multiply(3, 7);
+
 ```
 
 ## Contributing

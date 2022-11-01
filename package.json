@@ -1,7 +1,7 @@
 {
   "name": "@mcctomsk/react-native-matomo",
   "version": "0.1.0",
-  "description": "test",
+  "description": "Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for native platforms build that are present in the official package.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -38,7 +38,9 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "matomo",
+    "matomo-sdk"
   ],
   "repository": "https://github.com/mcctomsk/react-native-matomo",
   "author": "maxim vasin <maxim.vasin@mcc-tomsk.de> (https://github.com/mcctomsk)",

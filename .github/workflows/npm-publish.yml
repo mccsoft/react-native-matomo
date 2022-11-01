@@ -47,7 +47,7 @@ jobs:
           yarn install --cwd example --frozen-lockfile
           yarn install --frozen-lockfile
       - run: yarn prepare
-      - run: npm publish
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
@@ -67,7 +67,6 @@ jobs:
           yarn install --cwd example --frozen-lockfile
           yarn install --frozen-lockfile
       - run: yarn prepare
-      - run: npm publish
+      - run: npm publish --access public
         env:
-          NODE_NPM_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}

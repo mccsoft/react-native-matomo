@@ -41,7 +41,7 @@ jobs:
       - run: yarn test
 
   build-package:
-    needs: build
+    needs: [lint, typescript, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - run: yarn prepare

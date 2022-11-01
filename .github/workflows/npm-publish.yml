@@ -7,44 +7,55 @@ on:
   push:
     branches:
       - master
+  release:
+    types: [published]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: 📚 checkout
+        uses: actions/checkout@v3
+      - name: 🟢 node
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install
-      - run: npm test
-      - run: npm prepare
-
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/
-      - run: npm release
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-  publish-npm:
+          registry-url: https://registry.npmjs.org
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install --cwd example --frozen-lockfile
+            yarn install --frozen-lockfile
+  lint:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - run: npm release
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+      - run:
+          name: Lint files
+          command: |
+            yarn lint
+
+  typescript:
+    needs: build
+    steps:
+      - run:
+          name: Typecheck files
+          command: |
+            yarn typescript
+
+  unit-tests:
+    needs: build
+    steps:
+      - run:
+          name: Run unit tests
+          command: |
+            yarn test
+
+  build-package:
+    needs: build
+    steps:
+      - attach_project
+      - run:
+          name: Build package
+          command: |
+            yarn prepare

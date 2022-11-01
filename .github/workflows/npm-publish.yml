@@ -42,11 +42,12 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
+          scope: '@mcctomsk'
       - name: Install dependencies
         run: |
           yarn install --cwd example --frozen-lockfile
           yarn install --frozen-lockfile
-          - run: yarn prepare
+      - run: yarn prepare
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -60,7 +61,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: https://registry.npmjs.org/
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@mcctomsk'
       - name: Install dependencies
         run: |
           yarn install --cwd example --frozen-lockfile

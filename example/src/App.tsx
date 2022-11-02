@@ -1,49 +1,51 @@
 import * as React from 'react';
-
-import { StyleSheet, Text, View } from 'react-native';
-import {
-  initialize,
-  isInitialized,
-  setCustomDimension,
-  setUserId,
-  trackEvent,
-  trackView,
-} from '@mcctomsk/react-native-matomo';
+import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import Matomo from '@mcctomsk/react-native-matomo';
+import { useCallback } from 'react';
 
 export default function App() {
   const [isInit, setInit] = React.useState<boolean>(false);
-  const [isInitModule, setInitModule] = React.useState<boolean>(false);
+  const [isInitModule, setInitModule] = React.useState<boolean | null>(null);
 
-  React.useEffect(() => {
-    initialize('https://example.com/piwik.php', 1)
-      .catch((error) => console.warn('Failed to initialize matomo', error))
-      .then(() => setUserId('UniqueUserId'))
-      .then(() => setCustomDimension(1, '1.0.0'))
-      .then(() => {
-        setInit(true);
-        trackEvent('Application', 'Startup').catch((error: any) =>
-          console.warn('Failed to track event', error)
-        );
+  const actualize = useCallback(async () => {
+    const isInitialized = await Matomo.isInitialized();
+    setInitModule(isInitialized);
 
-        trackView('/start', 'Start screen title').catch((error: any) =>
-          console.warn('Failed to track screen', error)
-        );
-      });
+    return isInitialized;
   }, []);
 
-  React.useEffect(() => {
-    const asyncMethod = async () => {
-      const result = await isInitialized();
-      setInitModule(result);
-    };
+  const initializeMatomo = useCallback(async () => {
+    const isInitialized = await actualize();
 
-    asyncMethod();
-  }, []);
+    if (isInitialized) {
+      Alert.alert('Matomo has already initialized');
+    } else {
+      Matomo.initialize('https://example.com/piwik.php', 1)
+        .catch((error) => console.warn('Failed to initialize matomo', error))
+        .then(async () => {
+          setInit(true);
+
+          Matomo.trackEvent('Application', 'Startup').catch((error: any) =>
+            console.warn('Failed to track event', error)
+          );
+
+          await Matomo.trackView('start/welcome', 'Start screen title');
+        });
+    }
+  }, [actualize]);
 
   return (
     <View style={styles.container}>
-      <Text>Matomo init (local): {isInit}</Text>
-      <Text>Matomo init (module): {isInitModule}</Text>
+      <View style={styles.box}>
+        <Text>Matomo init (local): {JSON.stringify(isInit)}</Text>
+        <Text>Matomo init (module): {JSON.stringify(isInitModule)}</Text>
+      </View>
+
+      <View style={styles.footer}>
+        <Button title={'Initialize Matomo'} onPress={initializeMatomo} />
+
+        <Button title={'Actualize status'} onPress={actualize} />
+      </View>
     </View>
   );
 }
@@ -51,12 +53,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  footer: {
+    flex: 1,
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    marginBottom: 40,
   },
 });

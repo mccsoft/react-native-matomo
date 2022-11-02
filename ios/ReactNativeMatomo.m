@@ -6,15 +6,29 @@
     return YES;
 }
 
-RCT_EXTERN_METHOD(initialize:(NSString*)url id:(NSNumber* _Nonnull) id dimension:(NSString* _Nullable) dimension);
-RCT_EXTERN_METHOD(setUserId:(NSString* _Nonnull)userID);
-RCT_EXTERN_METHOD(setCustomDimension: (NSNumber* _Nonnull)index value: (NSString* _Nullable)value);
-RCT_EXTERN_METHOD(trackView: (NSString* _Nonnull)path title: (NSString* _Nullable)title);
-RCT_EXTERN_METHOD(trackGoal: (NSNumber* _Nonnull)goal values:(NSDictionary* _Nonnull) values);
-RCT_EXTERN_METHOD(trackEvent:(NSString* _Nonnull)category action:(NSString* _Nonnull) action values:(NSDictionary* _Nonnull) values);
-RCT_EXTERN_METHOD(trackAppDownload);
-RCT_EXTERN_METHOD(setAppOptOut:(BOOL _Nonnull) optOut);
-RCT_EXTERN_METHOD(isInitialized);
+RCT_EXTERN_METHOD(initialize:(NSString*)url withId:(NSNumber* _Nonnull)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setUserId:(NSString* _Nonnull)userID
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setCustomDimension: (NSNumber* _Nonnull)index withValue:(NSString* _Nullable)value
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(trackView: (NSString* _Nonnull)path withTitle:(NSString* _Nullable)title
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(trackGoal: (NSNumber* _Nonnull)goal withValues:(NSDictionary* _Nonnull)values
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(trackEvent:(NSString* _Nonnull)category withAction:(NSString* _Nonnull)action withValues:(NSDictionary* _Nonnull)values
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setAppOptOut:(BOOL _Nonnull) optOut
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+
+RCT_EXTERN_METHOD(trackAppDownload:(RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject);
 
 @end
-Footer

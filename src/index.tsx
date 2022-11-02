@@ -19,7 +19,9 @@ const ReactNativeMatomo = NativeModules.ReactNativeMatomo
 
 export function initialize(apiUrl: string, siteId: number): Promise<void> {
   const normalizedUrlBase =
-    apiUrl[apiUrl.length - 1] !== '/' ? `${apiUrl}/` : apiUrl;
+    apiUrl[apiUrl.length - 1] === '/'
+      ? apiUrl.substring(0, apiUrl.length - 1)
+      : apiUrl;
 
   return ReactNativeMatomo.initialize(normalizedUrlBase, siteId);
 }

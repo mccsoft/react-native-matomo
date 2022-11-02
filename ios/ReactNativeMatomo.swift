@@ -1,98 +1,94 @@
 import MatomoTracker
+import Darwin
 
 @objc(ReactNativeMatomo)
 class ReactNativeMatomo: NSObject {
 
     var tracker: MatomoTracker!
 
-    @objc public func initTracker(_ url:String, id:NSNumber, dimension:String) {
+    @objc(initialize:withId:withResolver:withRejecter:)
+    func initialize(url:String, id:NSNumber, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
         let baseUrl = URL(string:url)
         let siteId = id.stringValue
         tracker = MatomoTracker(siteId: siteId, baseURL: baseUrl!)
-        if (dimension != nil) {
-            tracker.setDimension(dimension, forIndex:1)
-        }
+        resolve(nil)
     }
 
-    @objc public func setUserId(_ userID:String) {
+    @objc(setUserId:withResolver:WithRejecter:)
+    func setUserId(userID:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             tracker.userId = userID
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
         }
     }
 
-    @objc public func setCustomDimension(_ index:NSNumber, value:String) {
+    @objc(setCustomDimension:withValue:withResolver:withRejecter:)
+    func setCustomDimension(index:NSNumber, value:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             if(value == nil){
                 tracker.remove(dimensionAtIndex: index.intValue)
             } else {
                 tracker.setDimension(value,forIndex:index.intValue)
             }
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
         }
     }
 
-    @objc public func trackScreen(_ path:String, title:String) {
+    @objc(trackView:withTitle:withResolver:withRejecter:)
+    func trackView(path:String, title:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             let views = path.components(separatedBy: "/")
             tracker.track(view: views)
-        }
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized. TrackView failed", nil)
+        }
     }
 
-    @objc public func trackGoal(_ goal:NSNumber, values:NSDictionary) {
+    @objc(trackGoal:withValues:withResolver:withRejecter:)
+    func trackGoal(goal:NSNumber, values:NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             let revenue = values.object(forKey: "revenue") as? Float
             tracker.trackGoal(id: goal.intValue, revenue: revenue)
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
         }
     }
 
-    @objc public func trackEvent(_ category:String, action:String, values:NSDictionary) {
+    @objc(trackEvent:withAction:withValues:withResolver:withRejecter:)
+    func trackEvent(category:String, action:String, values:NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             let name = values.object(forKey: "name") as? String
             let value = values.object(forKey: "value") as? NSNumber
             let url = values.object(forKey: "url") as? String
             let nsUrl = url != nil ? URL.init(string: url!) : nil
             tracker.track(eventWithCategory: category, action: action, name: name, number: value, url: nsUrl)
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
         }
     }
 
-    @objc public func trackContentImpression(_ name:String, values: NSDictionary) {
-        if (tracker != nil) {
-            let piece = values.object(forKey: "piece") as? String
-            let target = values.object(forKey: "target") as? String
-            tracker.trackContentImpression(name: name, piece: piece, target: target)
-        }
-    }
-
-    @objc public func trackContentInteraction(_ name:String, values:NSDictionary) {
-        if (tracker != nil) {
-            let interaction = values.object(forKey: "interaction") as? String
-            let piece = values.object(forKey: "piece") as? String
-            let target = values.object(forKey: "target") as? String
-            tracker.trackContentInteraction(name: name, interaction: interaction!, piece: piece, target: target)
-        }
-    }
-
-    @objc public func trackSearch(_ query:String, values:NSDictionary) {
-        if (tracker != nil) {
-            let category = values.object(forKey: "category") as? String
-            let resultCount = values.object(forKey: "resultCount") as? NSNumber
-            let url = values.object(forKey: "url") as? String
-
-            let intResultCount:Int = resultCount != nil ? resultCount!.intValue : 0;
-            let nsUrl:URL? = url != nil ? URL.init(string: url!) : nil;
-            tracker.trackSearch(query: query, category: category, resultCount: intResultCount, url: nsUrl)
-        }
-    }
-
-    @objc public func trackAppDownload() {
+    @objc(trackAppDownload:withRejecter:)
+    func trackAppDownload(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         // TODO: not implemented yet
+        resolve(nil)
     }
     
-    @objc public func isInitialized() {
-        // TODO: not implemented yet
+    @objc(isInitialized:withRejecter:)
+    func isInitialized(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(tracker != nil)
     }
-
-    @objc public func setAppOptOut(_ optOut:Bool) {
+
+    @objc(setAppOptOut:withResolver:withRejecter:)
+    func setAppOptOut(optOut:Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         tracker.isOptedOut = optOut;
+        resolve(nil)
     }
 
 }

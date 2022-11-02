@@ -1,93 +1,98 @@
-import Foundation
 import MatomoTracker
 
 @objc(ReactNativeMatomo)
 class ReactNativeMatomo: NSObject {
 
- var tracker:MatomoTracker?
+    var tracker: MatomoTracker!
 
-    @objc static func requiresMainQueueSetup() -> Bool {
-        return false
-    }
-
-    @objc(initialize:siteId:resolver:rejecter:)
-    func initialize(
-        apiUrl: String,
-        siteId: NSNumber,
-        resolver: RCTPromiseResolveBlock,
-        rejecter: RCTPromiseRejectBlock
-    ) -> Void {
-        tracker = MatomoTracker(siteId: siteId.stringValue, baseURL: URL(string: apiUrl)!)
-        resolver(nil)
-    }
-
-    @objc(trackView:resolver:rejecter:)
-    func trackView(
-        route: String,
-        title: String,
-        resolver: RCTPromiseResolveBlock,
-        rejecter: RCTPromiseRejectBlock
-    ) -> Void {
-        if let tracker = tracker {
-            tracker.track(view: route)
-            resolver(nil)
-        } else {
-            rejecter("not_initialized", "The tracker has not been initialized", NSError())
+    @objc public func initTracker(_ url:String, id:NSNumber, dimension:String) {
+        let baseUrl = URL(string:url)
+        let siteId = id.stringValue
+        tracker = MatomoTracker(siteId: siteId, baseURL: baseUrl!)
+        if (dimension != nil) {
+            tracker.setDimension(dimension, forIndex:1)
         }
     }
 
-    @objc(trackEvent:action:optionalParameters:resolver:rejecter:)
-    func trackEvent(
-        category: String,
-        action: String,
-        optionalParameters: NSDictionary,
-        resolver: RCTPromiseResolveBlock,
-        rejecter: RCTPromiseRejectBlock
-    ) -> Void {
-        if let tracker = tracker {
-            tracker.track(eventWithCategory: category,
-                          action: action,
-                          name: optionalParameters.value(forKey:"name") as? String,
-                          number: optionalParameters.value(forKey:"value") as? NSNumber,
-                          url: nil
-            )
-            resolver(nil)
-        } else {
-            rejecter("not_initialized", "The tracker has not been initialized", NSError())
+    @objc public func setUserId(_ userID:String) {
+        if (tracker != nil) {
+            tracker.userId = userID
         }
     }
 
-    @objc(setUserId:resolver:rejecter:)
-    func setUserId(
-        userId: String,
-        resolver: RCTPromiseResolveBlock,
-        rejecter: RCTPromiseRejectBlock
-    ) -> Void {
-        if let tracker = tracker {
-            tracker.userId = userId
-            resolver(nil)
-        } else {
-            rejecter("not_initialize", "The tracker has not been initialized", NSError())
+    @objc public func setCustomDimension(_ index:NSNumber, value:String) {
+        if (tracker != nil) {
+            if(value == nil){
+                tracker.remove(dimensionAtIndex: index.intValue)
+            } else {
+                tracker.setDimension(value,forIndex:index.intValue)
+            }
         }
     }
 
-    @objc(setCustomDimension:value:resolver:rejecter:)
-    func setCustomDimension(
-        dimensionId: NSNumber,
-        value: String?,
-        resolver: RCTPromiseResolveBlock,
-        rejecter: RCTPromiseRejectBlock
-    ) -> Void {
-        guard let tracker = tracker else {
-            rejecter("not_initialized", "The tracker has not been initialized", NSError())
-            return
+    @objc public func trackScreen(_ path:String, title:String) {
+        if (tracker != nil) {
+            let views = path.components(separatedBy: "/")
+            tracker.track(view: views)
         }
-        let id = dimensionId.intValue
-        if let value = value {
-            tracker.setDimension(value, forIndex: id)
-        } else {
-            tracker.remove(dimensionAtIndex: id)
-        }
-        resolver(nil)
     }
+
+    @objc public func trackGoal(_ goal:NSNumber, values:NSDictionary) {
+        if (tracker != nil) {
+            let revenue = values.object(forKey: "revenue") as? Float
+            tracker.trackGoal(id: goal.intValue, revenue: revenue)
+        }
+    }
+
+    @objc public func trackEvent(_ category:String, action:String, values:NSDictionary) {
+        if (tracker != nil) {
+            let name = values.object(forKey: "name") as? String
+            let value = values.object(forKey: "value") as? NSNumber
+            let url = values.object(forKey: "url") as? String
+            let nsUrl = url != nil ? URL.init(string: url!) : nil
+            tracker.track(eventWithCategory: category, action: action, name: name, number: value, url: nsUrl)
+        }
+    }
+
+    @objc public func trackContentImpression(_ name:String, values: NSDictionary) {
+        if (tracker != nil) {
+            let piece = values.object(forKey: "piece") as? String
+            let target = values.object(forKey: "target") as? String
+            tracker.trackContentImpression(name: name, piece: piece, target: target)
+        }
+    }
+
+    @objc public func trackContentInteraction(_ name:String, values:NSDictionary) {
+        if (tracker != nil) {
+            let interaction = values.object(forKey: "interaction") as? String
+            let piece = values.object(forKey: "piece") as? String
+            let target = values.object(forKey: "target") as? String
+            tracker.trackContentInteraction(name: name, interaction: interaction!, piece: piece, target: target)
+        }
+    }
+
+    @objc public func trackSearch(_ query:String, values:NSDictionary) {
+        if (tracker != nil) {
+            let category = values.object(forKey: "category") as? String
+            let resultCount = values.object(forKey: "resultCount") as? NSNumber
+            let url = values.object(forKey: "url") as? String
+
+            let intResultCount:Int = resultCount != nil ? resultCount!.intValue : 0;
+            let nsUrl:URL? = url != nil ? URL.init(string: url!) : nil;
+            tracker.trackSearch(query: query, category: category, resultCount: intResultCount, url: nsUrl)
+        }
+    }
+
+    @objc public func trackAppDownload() {
+        // TODO: not implemented yet
+    }
+    
+    @objc public func isInitialized() {
+        // TODO: not implemented yet
+    }
+
+    @objc public func setAppOptOut(_ optOut:Bool) {
+        tracker.isOptedOut = optOut;
+    }
+
 }

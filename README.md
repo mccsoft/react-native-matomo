@@ -30,32 +30,28 @@ Since the official [`matomo-sdk-ios`](https://github.com/matomo-org/matomo-sdk-i
 ## Quick usage
 
 ```js
-import { initialize, trackEvent, trackView, setUserId, setCustomDimension } from "@mcctomsk/react-native-matomo";
+import Matomo from "@mcctomsk/react-native-matomo";
 
-initialize("https://example.com/piwik.php", 1)
+Matomo.initialize("https://example.com/piwik.php", 1)
   .catch(error => console.warn("Failed to initialize matomo", error))
   .then(() => setUserId("UniqueUserId"))
   .then(() => setCustomDimension(1, "1.0.0"))
-  .then(() => {
-      trackEvent("Application", "Startup").catch(error =>
-        console.warn("Failed to track event", error)
-      );
+  .then(async () => {
+      await Matomo.trackEvent("Application", "Startup");
 
-      trackView("/start", 'Start screen title').catch(error =>
-        console.warn("Failed to track screen", error)
-      );
+      await Matomo.trackView("/start", 'Start screen title');
     }
   )
 ```
 
 ## Methods
 
-#### Init tracker
+#### Initialize
 
 Before using any function below, the tracker must be initialized.
 
 ```javascript
-Matomo.initTracker('https://your-matomo-domain.tld/piwik.php', 1);
+Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1);
 ```
 
 #### Set User ID
@@ -125,6 +121,13 @@ The MatomoTracker SDK supports opting out of tracking. Note that this flag must 
 
 ```javascript
 Matomo.setAppOptOut(true);
+```
+
+#### Is initialized
+You can easily find out is Matomo tracker initialized or not. Call this method and get `Boolean` value, use:
+
+```javascript
+await Matomo.isInitialized();
 ```
 
 ### Mocking

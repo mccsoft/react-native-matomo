@@ -36,7 +36,7 @@ export function trackEvent(
   category: string,
   event: string,
   name?: string,
-  value?: string
+  value?: number
 ): Promise<void> {
   return ReactNativeMatomo.trackEvent(category, event, {
     name: name,
@@ -66,3 +66,15 @@ export function setUserId(userId: string | null): Promise<void> {
 export function setAppOptOut(isOptedOut: boolean): Promise<void> {
   return ReactNativeMatomo.setAppOptOut(isOptedOut);
 }
+
+export default {
+  initialize: initialize,
+  isInitialized: isInitialized,
+  trackView: trackView,
+  trackEvent: trackEvent,
+  trackGoal: trackGoal,
+  trackAppDownload: trackAppDownload,
+  setCustomDimension: setCustomDimension,
+  setUserId: setUserId,
+  setAppOptOut: setAppOptOut,
+};

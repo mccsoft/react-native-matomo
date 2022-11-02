@@ -1,5 +1,7 @@
 package com.mcctomsk.reactnativematomo;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -62,8 +64,9 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void isInitialized(Promise promise) {
+  public void isInitialized(final Promise promise) {
     try {
+      Log.i("MATOMO is Init: ", String.valueOf(tracker == null));
       promise.resolve(tracker == null);
     } catch (Exception e) {
       promise.reject(e);

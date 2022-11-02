@@ -24,6 +24,7 @@ class ReactNativeMatomo: NSObject {
     @objc(trackView:resolver:rejecter:)
     func trackView(
         route: String,
+        title: String,
         resolver: RCTPromiseResolveBlock,
         rejecter: RCTPromiseRejectBlock
     ) -> Void {

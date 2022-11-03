@@ -42,7 +42,7 @@
     "matomo",
     "matomo-sdk"
   ],
-  "repository": "https://github.com/mcctomsk/react-native-matomo",
+  "repository": "https://github.com/mcctomsk/react-native-matomo.git",
   "author": "maxim vasin <maxim.vasin@mcc-tomsk.de> (https://github.com/mcctomsk)",
   "license": "MIT",
   "bugs": {

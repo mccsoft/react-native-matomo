@@ -1,5 +1,5 @@
 {
-  "name": "react-native-matomo",
+  "name": "@mcctomsk/react-native-matomo",
   "version": "0.1.18",
   "description": "Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for native platforms build that are present in the official package.",
   "main": "lib/commonjs/index",

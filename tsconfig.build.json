@@ -2,5 +2,4 @@
 {
   "extends": "./tsconfig",
   "exclude": ["example"],
-  "include": ["jestSetup.js"]
 }

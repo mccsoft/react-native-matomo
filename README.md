@@ -8,32 +8,19 @@ Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for nati
 - Requires React Native version 0.60.0, or later.
 - Supports iOS 10.0, or later.
 
-**Important**
-
-*As we host package in GitHub NPM registry, you need to do special step.
-Add `.npmrc` file with following content to the root of your project*
-
-```js
-registry=https://npm.pkg.github.com
-```
-
 After that you can install it as usual.
 
 Via NPM
 ```sh
-npm install @mcctomsk/react-native-matomo
+npm install @mav10/react-native-matomo
 ```
 
 Via Yarn
 ```sh
-yarn add @mcctomsk/react-native-matomo
+yarn add @mav10/react-native-matomo
 ```
 
-```shell
-"@mcctomsk/react-native-matomo": "0.1.13",
-```
-
-Directly in package.json pointed to github
+Directly in package.json pointed to GitHub
 ```sh
 "@mcctomsk/react-native-matomo": "https://github.com/mcctomsk/react-native-matomo",
 ```

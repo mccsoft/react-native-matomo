@@ -60,7 +60,6 @@ jobs:
         with:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
-          scope: 'mav10'
       - name: Install dependencies
         run: |
           yarn install --cwd example --frozen-lockfile

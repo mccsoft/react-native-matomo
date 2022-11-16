@@ -4,7 +4,6 @@
 Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for native platforms build that are present in the official package.
 
 ---
-[![Package publishing](https://github.com/mccsoft/react-native-matomo/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/mccsoft/react-native-matomo/actions/workflows/npm-publish.yml)
 ## Installation
 - Requires React Native version 0.60.0, or later.
 - Supports iOS 10.0, or later.

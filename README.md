@@ -1,4 +1,4 @@
-# @mcctomsk/react-native-matomo
+# @mccsoft/react-native-matomo
 
 
 Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for native platforms build that are present in the official package.
@@ -22,7 +22,7 @@ yarn add @mav10/react-native-matomo
 
 Directly in package.json pointed to GitHub
 ```sh
-"@mcctomsk/react-native-matomo": "https://github.com/mcctomsk/react-native-matomo",
+"@mccsoft/react-native-matomo": "https://github.com/mccsoft/react-native-matomo",
 ```
 
 #### :iphone:iOS (_Extra steps_)
@@ -39,7 +39,7 @@ Since the official [`matomo-sdk-ios`](https://github.com/matomo-org/matomo-sdk-i
 ## Quick usage
 
 ```js
-import Matomo from "@mcctomsk/react-native-matomo";
+import Matomo from "@mccsoft/react-native-matomo";
 
 Matomo.initialize("https://example.com/piwik.php", 1)
   .catch(error => console.warn("Failed to initialize matomo", error))
@@ -146,7 +146,7 @@ Add this line in your jest `setupFiles` configuration option from `package.json`
 ```
   "setupFiles": [
     ...
-    "./node_modules/@mcctomsk/react-native-matomo/jest.setup.js"
+    "./node_modules/@mccsoft/react-native-matomo/jest.setup.js"
   ],
 ```
 

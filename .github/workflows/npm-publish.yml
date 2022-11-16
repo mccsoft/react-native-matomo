@@ -40,7 +40,7 @@ jobs:
         with:
           node-version: 16
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@mcctomsk'
+          scope: '@mccsoft'
       - name: Install dependencies
         run: |
           yarn install --cwd example --frozen-lockfile

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
-import Matomo from '@mcctomsk/react-native-matomo';
+import Matomo from '@mccsoft/react-native-matomo';
 import { useCallback } from 'react';
 
 export default function App() {

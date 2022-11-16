@@ -139,6 +139,6 @@ if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "ReactNativeMatomo"
-    codegenJavaPackageName = "com.mcctomsk.reactnativematomo"
+    codegenJavaPackageName = "com.mccsoft.reactnativematomo"
   }
 }

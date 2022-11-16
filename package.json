@@ -1,5 +1,5 @@
 {
-  "name": "@mcctomsk/react-native-matomo",
+  "name": "@mccsoft/react-native-matomo",
   "version": "0.1.20",
   "description": "Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for native platforms build that are present in the official package.",
   "main": "lib/commonjs/index",
@@ -42,13 +42,13 @@
     "matomo",
     "matomo-sdk"
   ],
-  "repository": "https://github.com/mcctomsk/react-native-matomo.git",
-  "author": "maxim vasin <maxim.vasin@mcc-tomsk.de> (https://github.com/mcctomsk)",
+  "repository": "https://github.com/mccsoft/react-native-matomo.git",
+  "author": "maxim vasin <maxim.vasin@mcc-tomsk.de> (https://github.com/mccsoft)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mcctomsk/react-native-matomo/issues"
+    "url": "https://github.com/mccsoft/react-native-matomo/issues"
   },
-  "homepage": "https://github.com/mcctomsk/react-native-matomo#readme",
+  "homepage": "https://github.com/mccsoft/react-native-matomo#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"

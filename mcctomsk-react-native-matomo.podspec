@@ -4,7 +4,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
 Pod::Spec.new do |s|
-  s.name          = "mcctomsk-react-native-matomo"
+  s.name          = "mccsoft-react-native-matomo"
   s.version       = package["version"]
   s.summary       = package["description"]
   s.homepage      = package["homepage"]
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.0'
   s.platforms     = { :ios => "10.0" }
-  s.source        = { :git => "https://github.com/mcctomsk/react-native-matomo.git", :tag => "#{s.version}" }
+  s.source        = { :git => "https://github.com/mccsoft/react-native-matomo.git", :tag => "#{s.version}" }
 
 
   s.source_files  = "ios/**/*.{h,m,mm,swift}"

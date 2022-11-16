@@ -1,4 +1,4 @@
-jest.mock('@mcctomsk/react-native-matomo', () => ({
+jest.mock('@mccsoft/react-native-matomo', () => ({
   initialize: jest.fn(),
   isInitialized: jest.fn(),
   setUserId: jest.fn(),

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@mcctomsk/react-native-matomo": ["./src/index"]
+      "@mccsoft/react-native-matomo": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

@@ -141,12 +141,23 @@ await Matomo.isInitialized();
 
 ### Mocking
 
-Add this line in your jest `setupFiles` configuration option from `package.json`
+Add this to mock specific function as you wish
+
+```js
+jest.mock('@mccsoft/react-native-matomo', () => ({
+  initialize: () => Promise.resolve(),
+  trackEvent: () => Promise.resolve(),
+  trackView: () => Promise.resolve(),
+  ...
+}));
+```
+
+Or add this line in your jest `setupFiles` configuration to define default mocks.
 
 ```
   "setupFiles": [
     ...
-    "./node_modules/@mccsoft/react-native-matomo/jest.setup.js"
+    "./node_modules/@mccsoft/react-native-matomo/jestSetup.js"
   ],
 ```
 

@@ -13,6 +13,7 @@
     "android",
     "ios",
     "cpp",
+    "jestSetup.js",
     "*.podspec",
     "!lib/typescript/example",
     "!ios/build",
@@ -99,7 +100,7 @@
       "tagName": "v${version}"
     },
     "npm": {
-      "publish": true
+      "publish": false
     },
     "github": {
       "release": true

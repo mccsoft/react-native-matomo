@@ -12,12 +12,12 @@ After that you can install it as usual.
 
 Via NPM
 ```sh
-npm install @mav10/react-native-matomo
+npm install @mccsoft/react-native-matomo
 ```
 
 Via Yarn
 ```sh
-yarn add @mav10/react-native-matomo
+yarn add @mccsoft/react-native-matomo
 ```
 
 Directly in package.json pointed to GitHub

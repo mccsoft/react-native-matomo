@@ -14,7 +14,7 @@ class ReactNativeMatomo: NSObject {
         resolve(nil)
     }
 
-    @objc(setUserId:withResolver:WithRejecter:)
+    @objc(setUserId:withResolver:withRejecter:)
     func setUserId(userID:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             tracker.userId = userID

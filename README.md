@@ -63,6 +63,12 @@ Before using any function below, the tracker must be initialized.
 Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1);
 ```
 
+On Android events queue is by default cached on disk, so events are not lost when user close the app. On iOS by default evetns queue is saved in memory, howeve you con opt in to use cached queue on iOS as well by initilaizing tracker with third option:
+
+```javascript
+Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1, true);
+```
+
 #### Set User ID
 
 Providing the tracker with a user ID lets you connect data collected from multiple devices and multiple browsers for the same user. A user ID is typically a non empty string such as username, email address or UUID that uniquely identifies the user. The User ID must be the same for a given user across all her devices and browsers. .

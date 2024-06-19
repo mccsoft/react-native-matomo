@@ -17,12 +17,17 @@ const ReactNativeMatomo = NativeModules.ReactNativeMatomo
       }
     );
 
-export function initialize(apiUrl: string, siteId: number): Promise<void> {
+export function initialize(apiUrl: string, siteId: number, cachedQueue?: boolean): Promise<void> {
   const normalizedUrlBase =
     apiUrl[apiUrl.length - 1] === '/'
       ? apiUrl.substring(0, apiUrl.length - 1)
       : apiUrl;
 
+  if (Platform.OS === 'ios') {
+    return ReactNativeMatomo.initialize(normalizedUrlBase, siteId, !!cachedQueue);
+  }
+
+  // On Android cached queue is enabled by default
   return ReactNativeMatomo.initialize(normalizedUrlBase, siteId);
 }
 

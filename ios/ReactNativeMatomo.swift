@@ -6,11 +6,25 @@ class ReactNativeMatomo: NSObject {
 
     var tracker: MatomoTracker!
 
-    @objc(initialize:withId:withResolver:withRejecter:)
-    func initialize(url:String, id:NSNumber, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+    @objc(initialize:withId:witchCachedQueue:withResolver:withRejecter:)
+    func initialize(
+        url:String,
+        id:NSNumber,
+        cachedQueue: Bool,
+        resolve:RCTPromiseResolveBlock,
+        reject:RCTPromiseRejectBlock) -> Void
+    {
         let baseUrl = URL(string:url)
         let siteId = id.stringValue
-        tracker = MatomoTracker(siteId: siteId, baseURL: baseUrl!)
+        
+        if (cachedQueue) {
+            let queue = UserDefaultsCachedQueue(UserDefaults.standard, autoSave: true)
+            let dispatcher = URLSessionDispatcher(baseURL: baseUrl!)
+            tracker = MatomoTracker(siteId: siteId, queue: queue, dispatcher: dispatcher)
+        } else {
+            tracker = MatomoTracker(siteId: siteId, baseURL: baseUrl!)
+        }
+        
         resolve(nil)
     }
 

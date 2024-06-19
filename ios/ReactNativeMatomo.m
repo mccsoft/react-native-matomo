@@ -7,6 +7,7 @@
 }
 
 RCT_EXTERN_METHOD(initialize:(NSString*)url withId:(NSNumber* _Nonnull)id
+                  withCachedQueue:(BOOL _Nonnull)cachedQueue
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(setUserId:(NSString* _Nonnull)userID

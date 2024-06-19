@@ -5,17 +5,19 @@ public final class UserDefaultsCachedQueue: NSObject, Queue {
     private var items: [Event] {
         didSet {
             if autoSave {
-                try? UserDefaultsCachedQueue.write(items, to: userDefaults)
+                try? UserDefaultsCachedQueue.write(items, to: userDefaults, and: siteId)
             }
         }
     }
     private let userDefaults: UserDefaults
     private let autoSave: Bool
+    private let siteId: String
     
-    init(_ userDefaults: UserDefaults, autoSave: Bool = false) {
+    init(_ userDefaults: UserDefaults, siteId: String, autoSave: Bool = false) {
         self.userDefaults = userDefaults
         self.autoSave = autoSave
-        self.items = (try? UserDefaultsCachedQueue.readEvents(from: userDefaults)) ?? []
+        self.siteId = siteId
+        self.items = (try? UserDefaultsCachedQueue.readEvents(from: userDefaults, and: siteId)) ?? []
         super.init()
     }
     
@@ -40,27 +42,27 @@ public final class UserDefaultsCachedQueue: NSObject, Queue {
     }
     
     public func save() throws {
-        try UserDefaultsCachedQueue.write(items, to: userDefaults)
+        try UserDefaultsCachedQueue.write(items, to: userDefaults, and: siteId)
     }
 }
 
 extension UserDefaultsCachedQueue {
     
-    private static let userDefaultsKey: String = {
+    private static func userDefaultsKey(for siteId: String) -> String {
         let bundleIdentifier = Bundle.main.bundleIdentifier ?? "default"
-        return "\(bundleIdentifier).UserDefaultsQueue.items"
-    }()
+        return "\(bundleIdentifier).\(siteId).MatomoUserDefaultsCachedQueue.items"
+    }
     
-    private static func readEvents(from userDefaults: UserDefaults) throws -> [Event] {
-        guard let data = userDefaults.data(forKey: userDefaultsKey) else { return [] }
+    private static func readEvents(from userDefaults: UserDefaults, and siteId: String) throws -> [Event] {
+        guard let data = userDefaults.data(forKey: userDefaultsKey(for: siteId)) else { return [] }
         let decoder = JSONDecoder()
         return try decoder.decode([Event].self, from: data)
     }
     
-    private static func write(_ events: [Event], to userDefaults: UserDefaults) throws {
+    private static func write(_ events: [Event], to userDefaults: UserDefaults, and siteId: String) throws {
         let encoder = JSONEncoder()
         let data = try encoder.encode(events)
-        userDefaults.set(data, forKey: userDefaultsKey)
+        userDefaults.set(data, forKey: userDefaultsKey(for: siteId))
     }
     
 }

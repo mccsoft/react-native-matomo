@@ -18,7 +18,7 @@ class ReactNativeMatomo: NSObject {
         let siteId = id.stringValue
         
         if (cachedQueue) {
-            let queue = UserDefaultsCachedQueue(UserDefaults.standard, autoSave: true)
+            let queue = UserDefaultsCachedQueue(UserDefaults.standard, siteId: siteId, autoSave: true)
             let dispatcher = URLSessionDispatcher(baseURL: baseUrl!)
             tracker = MatomoTracker(siteId: siteId, queue: queue, dispatcher: dispatcher)
         } else {

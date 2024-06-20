@@ -74,6 +74,10 @@ export function setAppOptOut(isOptedOut: boolean): Promise<void> {
   return ReactNativeMatomo.setAppOptOut(isOptedOut);
 }
 
+export function dispatch(): Promise<void> {
+  return ReactNativeMatomo.dispatch();
+}
+
 export default {
   initialize: initialize,
   isInitialized: isInitialized,
@@ -84,4 +88,5 @@ export default {
   setCustomDimension: setCustomDimension,
   setUserId: setUserId,
   setAppOptOut: setAppOptOut,
+  dispatch: dispatch,
 };

@@ -105,4 +105,13 @@ class ReactNativeMatomo: NSObject {
         resolve(nil)
     }
 
+    @objc(dispatch:withRejecter:)
+    func dispatch(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        if (tracker != nil) {
+            tracker.dispatch()
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
+        }
+    }
 }

@@ -145,6 +145,14 @@ You can easily find out is Matomo tracker initialized or not. Call this method a
 await Matomo.isInitialized();
 ```
 
+#### Dispatch events manually
+
+Sometimes there is a need to dispach events manully:
+
+```javascript
+Matomo.dispatch();
+```
+
 ### Mocking
 
 Add this to mock specific function as you wish

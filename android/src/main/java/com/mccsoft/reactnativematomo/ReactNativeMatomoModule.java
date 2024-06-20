@@ -152,6 +152,17 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
     }
   }
 
+  @ReactMethod
+  public void dispatch(Promise promise) {
+    try {
+      tracker.dispatch();
+
+      promise.resolve(null);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
   private TrackHelper getTrackHelper() {
     if (tracker == null) {
       throw new RuntimeException("Tracker must be initialized before usage");

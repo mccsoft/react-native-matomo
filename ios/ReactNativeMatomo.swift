@@ -98,7 +98,7 @@ class ReactNativeMatomo: NSObject {
     func isInitialized(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         resolve(tracker != nil)
     }
-
+
     @objc(setAppOptOut:withResolver:withRejecter:)
     func setAppOptOut(optOut:Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         tracker.isOptedOut = optOut;
@@ -110,6 +110,25 @@ class ReactNativeMatomo: NSObject {
         if (tracker != nil) {
             tracker.dispatch()
             resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
+        }
+    }
+
+    @objc(setDispatchInterval:withResolver:withRejecter:)
+    func setDispatchInterval(seconds: NSNumber, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        if (tracker != nil) {
+            tracker.dispatchInterval = seconds.doubleValue
+            resolve(nil)
+        } else {
+            reject("not_initialized", "Matomo not initialized", nil)
+        }
+    }
+
+    @objc(getDispatchInterval:withRejecter:)
+    func getDispatchInterval(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        if (tracker != nil) {
+            resolve(tracker.dispatchInterval)
         } else {
             reject("not_initialized", "Matomo not initialized", nil)
         }

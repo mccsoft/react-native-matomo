@@ -153,6 +153,21 @@ Sometimes there is a need to dispach events manully:
 Matomo.dispatch();
 ```
 
+#### Set dispatch interval in seconds
+
+There is an option to change dispatch interval using seconds:
+
+```javascript
+Matomo.setDispatchInterval(30)
+```
+
+#### Get dispatch internatl
+You can easily find out current dispatch interanl in seconds. Call this method and get `number` value, use:
+
+```javascript
+await Matomo.getDispatchInterval();
+```
+
 ### Mocking
 
 Add this to mock specific function as you wish

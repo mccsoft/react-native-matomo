@@ -78,6 +78,22 @@ export function dispatch(): Promise<void> {
   return ReactNativeMatomo.dispatch();
 }
 
+export function setDispatchInterval(seconds: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof seconds !== 'number' || seconds <= 0) {
+      reject(new Error('Invalid interval. The value must be a positive number.'));
+    } else {
+      ReactNativeMatomo.setDispatchInterval(seconds)
+        .then(resolve)
+        .catch(reject);
+    }
+  });
+}
+
+export function getDispatchInterval(): Promise<number> {
+  return ReactNativeMatomo.getDispatchInterval();
+}
+
 export default {
   initialize: initialize,
   isInitialized: isInitialized,
@@ -89,4 +105,6 @@ export default {
   setUserId: setUserId,
   setAppOptOut: setAppOptOut,
   dispatch: dispatch,
+  setDispatchInterval: setDispatchInterval,
+  getDispatchInterval: getDispatchInterval,
 };

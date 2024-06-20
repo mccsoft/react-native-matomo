@@ -41,4 +41,10 @@ RCT_EXTERN_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve withRejecter:(RC
 
 RCT_EXTERN_METHOD(dispatch:(RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject);
 
+RCT_EXTERN_METHOD(setDispatchInterval: (NSNumber* _Nonnull)seconds
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+
+RCT_EXTERN_METHOD(getDispatchInterval:(RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject);
+
 @end

@@ -17,14 +17,22 @@ const ReactNativeMatomo = NativeModules.ReactNativeMatomo
       }
     );
 
-export function initialize(apiUrl: string, siteId: number, cachedQueue?: boolean): Promise<void> {
+export function initialize(
+  apiUrl: string,
+  siteId: number,
+  cachedQueue?: boolean
+): Promise<void> {
   const normalizedUrlBase =
     apiUrl[apiUrl.length - 1] === '/'
       ? apiUrl.substring(0, apiUrl.length - 1)
       : apiUrl;
 
   if (Platform.OS === 'ios') {
-    return ReactNativeMatomo.initialize(normalizedUrlBase, siteId, !!cachedQueue);
+    return ReactNativeMatomo.initialize(
+      normalizedUrlBase,
+      siteId,
+      !!cachedQueue
+    );
   }
 
   // On Android cached queue is enabled by default
@@ -81,7 +89,9 @@ export function dispatch(): Promise<void> {
 export function setDispatchInterval(seconds: number): Promise<void> {
   return new Promise((resolve, reject) => {
     if (typeof seconds !== 'number' || seconds <= 0) {
-      reject(new Error('Invalid interval. The value must be a positive number.'));
+      reject(
+        new Error('Invalid interval. The value must be a positive number.')
+      );
     } else {
       ReactNativeMatomo.setDispatchInterval(seconds)
         .then(resolve)

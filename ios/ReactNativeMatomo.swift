@@ -60,15 +60,14 @@ class ReactNativeMatomo: NSObject {
         }
 
         let actionName = (title ?? path).components(separatedBy: "/")
-        let bundleIdentifier = Application.makeCurrentApplication().bundleIdentifier ?? "unknown"
-        let urlString = "http://\(bundleIdentifier)\(path)"
+        let url = tracker.contentBase?.appendingPathComponent(path)
         
-        guard let url = URL(string: urlString) else {
-            reject("invalid_url", "The generated URL is invalid.", nil)
+        guard let finalURL = url else {
+            reject("invalid_url", "Failed to generate a valid URL.", nil)
             return
         }
         
-        tracker.track(view: actionName, url: url)
+        tracker.track(view: actionName, url: finalURL)
         resolve(nil)
     }
 

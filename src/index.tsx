@@ -104,6 +104,14 @@ export function getDispatchInterval(): Promise<number> {
   return ReactNativeMatomo.getDispatchInterval();
 }
 
+export function trackSiteSearch(
+  query: string,
+  category?: string,
+  resultCount?: number
+): Promise<void> {
+  return ReactNativeMatomo.trackSiteSearch(query, category, resultCount);
+}
+
 export default {
   initialize: initialize,
   isInitialized: isInitialized,
@@ -117,4 +125,5 @@ export default {
   dispatch: dispatch,
   setDispatchInterval: setDispatchInterval,
   getDispatchInterval: getDispatchInterval,
+  trackSiteSearch: trackSiteSearch,
 };

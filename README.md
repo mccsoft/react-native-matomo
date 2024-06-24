@@ -6,10 +6,13 @@ Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for nati
 ---
 ## Installation
 - Requires React Native version 0.60.0, or later.
-- Supports iOS 11.0, or later.
+- Supports: 
+  - iOS: 11.0 and later
+  - tvOS: 13.0 and later (using `react-native-tvos`)
+  - Android SDK: 21 and later
 - Supports Matomo SDK:
- - Android: 4.2
- - iOS: 7.6.0
+  - Android: 4.2
+  - iOS/tvOS: 7.6.0
 
 After that you can install it as usual.
 
@@ -169,6 +172,14 @@ You can easily find out current dispatch interanl in seconds. Call this method a
 
 ```javascript
 await Matomo.getDispatchInterval();
+```
+
+#### Track site search
+
+Track internal 'site' searches. (Requires Site Search to be active in Matomo website settings) Parameters are `query`, `category` and `resultCount`.
+
+```javascript
+Matomo.trackSiteSearch('Query', 'Category', 10);
 ```
 
 ### Mocking

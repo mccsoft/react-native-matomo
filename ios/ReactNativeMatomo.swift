@@ -53,14 +53,22 @@ class ReactNativeMatomo: NSObject {
     }
 
     @objc(trackView:withTitle:withResolver:withRejecter:)
-    func trackView(path:String, title:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        if (tracker != nil) {
-            let views = path.components(separatedBy: "/")
-            tracker.track(view: views)
-            resolve(nil)
-        } else {
+    func trackView(path: String, title: String?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        guard let tracker = tracker else {
             reject("not_initialized", "Matomo not initialized. TrackView failed", nil)
-        }
+            return
+        }
+
+        let action = (title ?? path).components(separatedBy: "/")
+        let url = tracker.contentBase?.appendingPathComponent(path)
+        
+        guard let finalURL = url else {
+            reject("invalid_url", "Failed to generate a valid URL.", nil)
+            return
+        }
+        
+        tracker.track(view: action, url: finalURL)
+        resolve(nil)
     }
 
     @objc(trackGoal:withValues:withResolver:withRejecter:)
@@ -132,5 +140,16 @@ class ReactNativeMatomo: NSObject {
         } else {
             reject("not_initialized", "Matomo not initialized", nil)
         }
+    }
+    
+    @objc(trackSiteSearch:withCategory:withResultCount:withResolver:withRejecter:)
+    func trackSiteSearch(query: String, category: String?, resultCount: NSNumber?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let tracker = tracker else {
+            reject("not_initialized", "Matomo not initialized", nil)
+            return
+        }
+
+        tracker.trackSearch(query: query, category: category, resultCount: resultCount?.intValue)
+        resolve(nil)
     }
 }

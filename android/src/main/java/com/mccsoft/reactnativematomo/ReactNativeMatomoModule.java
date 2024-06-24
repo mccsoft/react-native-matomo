@@ -194,9 +194,9 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void trackSiteSearch(String query, @Nullable String category, @Nullable Number resultCount, Promise promise) {
+  public void trackSiteSearch(String query, @Nullable String category, @Nullable Integer resultCount, Promise promise) {
     try {
-      getTrackHelper().search(query).category(category).resultCount(resultCount).with(tracker);
+      getTrackHelper().search(query).category(category).count(resultCount).with(tracker);
       promise.resolve(null);
     } catch (Exception e) {
       promise.reject(e);

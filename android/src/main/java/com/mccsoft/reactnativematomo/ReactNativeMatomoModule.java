@@ -19,6 +19,7 @@ import org.matomo.sdk.extra.TrackHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @ReactModule(name = ReactNativeMatomoModule.NAME)
 public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
@@ -147,6 +148,46 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
       }
 
       promise.resolve(null);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void dispatch(Promise promise) {
+    try {
+      tracker.dispatch();
+
+      promise.resolve(null);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void setDispatchInterval(int seconds, Promise promise) {
+    try {
+      if (tracker != null) {
+        tracker.setDispatchInterval(TimeUnit.SECONDS.toMillis(seconds));
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void getDispatchInterval(Promise promise) {
+    try {
+      if (tracker != null) {
+        long intervalMillis = tracker.getDispatchInterval();
+        int intervalSeconds = (int) TimeUnit.MILLISECONDS.toSeconds(intervalMillis);
+        promise.resolve(intervalSeconds);
+      } else {
+        promise.reject("not_initialized", "Matomo not initialized");
+      }
     } catch (Exception e) {
       promise.reject(e);
     }

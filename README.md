@@ -66,6 +66,12 @@ Before using any function below, the tracker must be initialized.
 Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1);
 ```
 
+On Android events queue is by default cached on disk, so events are not lost when user close the app. On iOS by default evetns queue is saved in memory, however you con opt in to use cached queue on iOS as well by initilaizing tracker with third option:
+
+```javascript
+Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1, true);
+```
+
 #### Set User ID
 
 Providing the tracker with a user ID lets you connect data collected from multiple devices and multiple browsers for the same user. A user ID is typically a non empty string such as username, email address or UUID that uniquely identifies the user. The User ID must be the same for a given user across all her devices and browsers. .
@@ -140,6 +146,29 @@ You can easily find out is Matomo tracker initialized or not. Call this method a
 
 ```javascript
 await Matomo.isInitialized();
+```
+
+#### Dispatch events manually
+
+Sometimes there is a need to dispach events manully:
+
+```javascript
+Matomo.dispatch();
+```
+
+#### Set dispatch interval in seconds
+
+There is an option to change dispatch interval using seconds:
+
+```javascript
+Matomo.setDispatchInterval(30)
+```
+
+#### Get dispatch internatl
+You can easily find out current dispatch interanl in seconds. Call this method and get `number` value, use:
+
+```javascript
+await Matomo.getDispatchInterval();
 ```
 
 ### Mocking

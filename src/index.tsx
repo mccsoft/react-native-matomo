@@ -17,12 +17,17 @@ const ReactNativeMatomo = NativeModules.ReactNativeMatomo
       }
     );
 
-export function initialize(apiUrl: string, siteId: number): Promise<void> {
+export function initialize(apiUrl: string, siteId: number, cachedQueue?: boolean): Promise<void> {
   const normalizedUrlBase =
     apiUrl[apiUrl.length - 1] === '/'
       ? apiUrl.substring(0, apiUrl.length - 1)
       : apiUrl;
 
+  if (Platform.OS === 'ios') {
+    return ReactNativeMatomo.initialize(normalizedUrlBase, siteId, !!cachedQueue);
+  }
+
+  // On Android cached queue is enabled by default
   return ReactNativeMatomo.initialize(normalizedUrlBase, siteId);
 }
 
@@ -69,6 +74,26 @@ export function setAppOptOut(isOptedOut: boolean): Promise<void> {
   return ReactNativeMatomo.setAppOptOut(isOptedOut);
 }
 
+export function dispatch(): Promise<void> {
+  return ReactNativeMatomo.dispatch();
+}
+
+export function setDispatchInterval(seconds: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof seconds !== 'number' || seconds <= 0) {
+      reject(new Error('Invalid interval. The value must be a positive number.'));
+    } else {
+      ReactNativeMatomo.setDispatchInterval(seconds)
+        .then(resolve)
+        .catch(reject);
+    }
+  });
+}
+
+export function getDispatchInterval(): Promise<number> {
+  return ReactNativeMatomo.getDispatchInterval();
+}
+
 export default {
   initialize: initialize,
   isInitialized: isInitialized,
@@ -79,4 +104,7 @@ export default {
   setCustomDimension: setCustomDimension,
   setUserId: setUserId,
   setAppOptOut: setAppOptOut,
+  dispatch: dispatch,
+  setDispatchInterval: setDispatchInterval,
+  getDispatchInterval: getDispatchInterval,
 };

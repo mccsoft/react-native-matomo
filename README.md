@@ -6,7 +6,10 @@ Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for nati
 ---
 ## Installation
 - Requires React Native version 0.60.0, or later.
-- Supports iOS 10.0, or later.
+- Supports iOS 11.0, or later.
+- Supports Matomo SDK:
+ - Android: 4.2
+ - iOS: 7.6.0
 
 After that you can install it as usual.
 

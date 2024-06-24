@@ -143,12 +143,13 @@ class ReactNativeMatomo: NSObject {
     }
     
     @objc(trackSiteSearch:withCategory:withResultCount:withResolver:withRejecter:)
-    func trackSiteSearch(query: String, category: String?, resultCount: NSNumber?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        if (tracker != nil) {
-            tracker.trackSearch(query: query, category: category, resultCount: resultCount?.intValue)
-            resolve(nil)
-        } else {
+    func trackSiteSearch(query: String, category: String?, resultCount: NSNumber?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let tracker = tracker else {
             reject("not_initialized", "Matomo not initialized", nil)
+            return
         }
+
+        tracker.trackSearch(query: query, category: category, resultCount: resultCount?.intValue)
+        resolve(nil)
     }
 }

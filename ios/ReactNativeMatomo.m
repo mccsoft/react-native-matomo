@@ -47,7 +47,7 @@ RCT_EXTERN_METHOD(setDispatchInterval: (NSNumber* _Nonnull)seconds
 
 RCT_EXTERN_METHOD(getDispatchInterval:(RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject);
 
-RCT_EXTERN_METHOD(trackSiteSearch:(NSString* _Nonnull)query withCategory:(NSString* _Nullable)category withResultCount:(NSNumber* _Nonnull)resultCount
+RCT_EXTERN_METHOD(trackSiteSearch:(NSString* _Nonnull)query withCategory:(NSString* _Nullable)category withResultCount:(NSNumber* _Nullable)resultCount
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject);
 

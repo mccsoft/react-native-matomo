@@ -193,6 +193,16 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
     }
   }
 
+  @ReactMethod
+  public void trackSiteSearch(String query, @Nullable String category, @Nullable Number resultCount, Promise promise) {
+    try {
+      getTrackHelper().search(query).category(category).resultCount(resultCount).with(tracker);
+      promise.resolve(null);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
   private TrackHelper getTrackHelper() {
     if (tracker == null) {
       throw new RuntimeException("Tracker must be initialized before usage");

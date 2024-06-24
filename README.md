@@ -174,6 +174,14 @@ You can easily find out current dispatch interanl in seconds. Call this method a
 await Matomo.getDispatchInterval();
 ```
 
+#### Track site search
+
+Track internal 'site' searches. (Requires Site Search to be active in Matomo website settings) Parameters are `query`, `category` and `resultCount`.
+
+```javascript
+Matomo.trackSiteSearch('Query', 'Category', 10);
+```
+
 ### Mocking
 
 Add this to mock specific function as you wish

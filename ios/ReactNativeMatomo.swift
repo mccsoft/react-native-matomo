@@ -59,7 +59,7 @@ class ReactNativeMatomo: NSObject {
             return
         }
 
-        let actionName = (title ?? path).components(separatedBy: "/")
+        let action = (title ?? path).components(separatedBy: "/")
         let url = tracker.contentBase?.appendingPathComponent(path)
         
         guard let finalURL = url else {
@@ -67,7 +67,7 @@ class ReactNativeMatomo: NSObject {
             return
         }
         
-        tracker.track(view: actionName, url: finalURL)
+        tracker.track(view: action, url: finalURL)
         resolve(nil)
     }
 

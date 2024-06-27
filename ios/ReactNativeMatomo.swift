@@ -6,7 +6,7 @@ class ReactNativeMatomo: NSObject {
 
     var tracker: MatomoTracker!
 
-    @objc(initialize:withId:witchCachedQueue:withResolver:withRejecter:)
+    @objc(initialize:withId:withCachedQueue:withResolver:withRejecter:)
     func initialize(
         url:String,
         id:NSNumber,

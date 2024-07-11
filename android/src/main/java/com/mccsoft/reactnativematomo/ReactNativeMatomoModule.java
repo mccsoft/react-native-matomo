@@ -93,6 +93,9 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
       if (optionalParameters.hasKey("value")) {
         event.value((float) optionalParameters.getDouble("value"));
       }
+      if (optionalParameters.hasKey("url")) {
+        event.path(optionalParameters.getString("url"));
+      }
 
       event.with(tracker);
 

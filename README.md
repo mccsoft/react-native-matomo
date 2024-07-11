@@ -69,7 +69,7 @@ Before using any function below, the tracker must be initialized.
 Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1);
 ```
 
-On Android events queue is by default cached on disk, so events are not lost when user close the app. On iOS by default evetns queue is saved in memory, however you con opt in to use cached queue on iOS as well by initilaizing tracker with third option:
+On Android events queue is by default cached on disk, so events are not lost when user close the app. On iOS by default evetns queue is saved in memory, however you can opt in to use cached queue on iOS as well by initilaizing tracker with third option:
 
 ```javascript
 Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1, true);

@@ -51,11 +51,13 @@ export function trackEvent(
   category: string,
   event: string,
   name?: string,
-  value?: number
+  value?: number,
+  url?: string
 ): Promise<void> {
   return ReactNativeMatomo.trackEvent(category, event, {
     name: name,
     value: value,
+    url: url,
   });
 }
 

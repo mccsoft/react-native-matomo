@@ -69,7 +69,7 @@ Before using any function below, the tracker must be initialized.
 Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1);
 ```
 
-On Android events queue is by default cached on disk, so events are not lost when user close the app. On iOS by default evetns queue is saved in memory, however you can opt in to use cached queue on iOS as well by initilaizing tracker with third option:
+On Android events queue is by default cached on disk, so events are not lost when user close the app. On iOS by default evetns queue is saved in memory, however you con opt in to use cached queue on iOS as well by initilaizing tracker with third option:
 
 ```javascript
 Matomo.initialize('https://your-matomo-domain.tld/piwik.php', 1, true);
@@ -113,12 +113,15 @@ Matomo.trackView('/your_activity', 'Title');
 
 #### Track events
 
-To collect data about user's interaction with interactive components of your app, like button presses or the use of a particular item in a game
-use trackEvent.
+To collect data about user's interaction with interactive components of your app, like button presses or the use of a particular item in a game use trackEvent.
 
 ```javascript
 Matomo.trackEvent('category', 'action', 'label', 1000);
 ```
+
+Optionaly you can pass also path / url:
+
+Matomo.trackEvent('category', 'action', 'label', 1000), 'https://pathToYourSite.com/Action/Label';
 
 #### Track goals
 

@@ -39,7 +39,7 @@ class ReactNativeMatomo: NSObject {
     }
 
     @objc(setCustomDimension:withValue:withResolver:withRejecter:)
-    func setCustomDimension(index:NSNumber, value:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    func setCustomDimension(index:NSNumber, value:String?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         if (tracker != nil) {
             if(value == nil){
                 tracker.remove(dimensionAtIndex: index.intValue)

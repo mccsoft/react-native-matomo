@@ -39,17 +39,19 @@ class ReactNativeMatomo: NSObject {
     }
 
     @objc(setCustomDimension:withValue:withResolver:withRejecter:)
-    func setCustomDimension(index:NSNumber, value:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        if (tracker != nil) {
-            if(value == nil){
-                tracker.remove(dimensionAtIndex: index.intValue)
-            } else {
-                tracker.setDimension(value,forIndex:index.intValue)
-            }
-            resolve(nil)
-        } else {
+    func setCustomDimension(index: NSNumber, value: String?, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        guard let tracker = self.tracker else {
             reject("not_initialized", "Matomo not initialized", nil)
+            return
         }
+
+        if let unwrappedValue = value {
+            tracker.setDimension(unwrappedValue, forIndex: index.intValue)
+        } else {
+            tracker.remove(dimensionAtIndex: index.intValue)
+        }
+        
+        resolve(nil)
     }
 
     @objc(trackView:withTitle:withResolver:withRejecter:)

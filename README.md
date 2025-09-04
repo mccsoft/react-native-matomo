@@ -121,7 +121,7 @@ Matomo.trackEvent('category', 'action', 'label', 1000);
 
 Optionaly you can pass also path / url:
 
-Matomo.trackEvent('category', 'action', 'label', 1000), 'https://pathToYourSite.com/Action/Label';
+Matomo.trackEvent('category', 'action', 'label', 1000, 'https://pathToYourSite.com/Action/Label)';
 
 #### Track goals
 

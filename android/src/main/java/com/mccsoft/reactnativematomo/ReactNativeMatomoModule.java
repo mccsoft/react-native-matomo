@@ -93,6 +93,9 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
       if (optionalParameters.hasKey("value")) {
         event.value((float) optionalParameters.getDouble("value"));
       }
+      if (optionalParameters.hasKey("url")) {
+        event.path(optionalParameters.getString("url"));
+      }
 
       event.with(tracker);
 
@@ -188,6 +191,16 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
       } else {
         promise.reject("not_initialized", "Matomo not initialized");
       }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void trackSiteSearch(String query, @Nullable String category, @Nullable Integer resultCount, Promise promise) {
+    try {
+      getTrackHelper().search(query).category(category).count(resultCount).with(tracker);
+      promise.resolve(null);
     } catch (Exception e) {
       promise.reject(e);
     }

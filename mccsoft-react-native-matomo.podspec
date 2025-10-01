@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.authors       = package["author"]
 
   s.swift_version = '5.0'
-  s.platforms     = { :ios => "11.0" }
+  s.platforms     = { :ios => "11.0", :tvos => "13.0" }
   s.source        = { :git => "https://github.com/mccsoft/react-native-matomo.git", :tag => "#{s.version}" }
 
 

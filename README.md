@@ -6,10 +6,13 @@ Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for nati
 ---
 ## Installation
 - Requires React Native version 0.60.0, or later.
-- Supports iOS 11.0, or later.
+- Supports: 
+  - iOS: 11.0 and later
+  - tvOS: 13.0 and later (using `react-native-tvos`)
+  - Android SDK: 21 and later
 - Supports Matomo SDK:
- - Android: 4.2
- - iOS: 7.6.0
+  - Android: 4.2
+  - iOS/tvOS: 7.6.0
 
 After that you can install it as usual.
 
@@ -110,12 +113,15 @@ Matomo.trackView('/your_activity', 'Title');
 
 #### Track events
 
-To collect data about user's interaction with interactive components of your app, like button presses or the use of a particular item in a game
-use trackEvent.
+To collect data about user's interaction with interactive components of your app, like button presses or the use of a particular item in a game use trackEvent.
 
 ```javascript
 Matomo.trackEvent('category', 'action', 'label', 1000);
 ```
+
+Optionaly you can pass also path / url:
+
+Matomo.trackEvent('category', 'action', 'label', 1000, 'https://pathToYourSite.com/Action/Label)';
 
 #### Track goals
 
@@ -169,6 +175,14 @@ You can easily find out current dispatch interanl in seconds. Call this method a
 
 ```javascript
 await Matomo.getDispatchInterval();
+```
+
+#### Track site search
+
+Track internal 'site' searches. (Requires Site Search to be active in Matomo website settings) Parameters are `query`, `category` and `resultCount`.
+
+```javascript
+Matomo.trackSiteSearch('Query', 'Category', 10);
 ```
 
 ### Mocking

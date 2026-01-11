@@ -298,6 +298,35 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
     }
   }
 
+  @ReactMethod
+  public void getUserId(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        promise.resolve(tracker.getUserId());
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void startNewSession(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        tracker.startNewSession();
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
   private Tracker getTracker(String instanceId) {
     Tracker tracker = trackers.get(instanceId);
     if (tracker == null) {

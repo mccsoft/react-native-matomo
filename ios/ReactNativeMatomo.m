@@ -89,4 +89,12 @@ RCT_EXTERN_METHOD(resetCustomDimensions:(NSString* _Nonnull)instanceId
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject);
 
+RCT_EXTERN_METHOD(getUserId:(NSString* _Nonnull)instanceId
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+
+RCT_EXTERN_METHOD(startNewSession:(NSString* _Nonnull)instanceId
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject);
+
 @end

@@ -285,6 +285,23 @@ Reset the user ID (generates a new visitor ID):
 await tracker.reset();
 ```
 
+#### Get User ID
+
+Get the current user ID:
+
+```javascript
+const userId = await tracker.getUserId();
+```
+
+#### Start New Session
+
+Force the next tracking event to start a new session:
+
+```javascript
+await tracker.startNewSession();
+await tracker.trackView('/home'); // This view starts the new session
+```
+
 #### Stop Tracker
 
 Stop and remove a tracker instance. Optionally dispatch remaining events before stopping:
@@ -417,6 +434,18 @@ Matomo.resetCustomDimensions();
 Matomo.stop({ dispatchRemaining: true });
 ```
 
+#### Get User ID
+
+```javascript
+const userId = await Matomo.getUserId();
+```
+
+#### Start New Session
+
+```javascript
+await Matomo.startNewSession();
+```
+
 ## Cache Queue Backward Compatibility
 
 The cache queue system maintains backward compatibility:
@@ -449,6 +478,8 @@ jest.mock('@mccsoft/react-native-matomo', () => ({
     resetCustomDimensions: () => Promise.resolve(),
     stop: () => Promise.resolve(),
     getInstanceId: () => 'default',
+    getUserId: () => Promise.resolve(null),
+    startNewSession: () => Promise.resolve(),
   })),
   // Legacy API mocks
   initialize: () => Promise.resolve(),
@@ -467,6 +498,8 @@ jest.mock('@mccsoft/react-native-matomo', () => ({
   reset: () => Promise.resolve(),
   resetCustomDimensions: () => Promise.resolve(),
   stop: () => Promise.resolve(),
+  getUserId: () => Promise.resolve(null),
+  startNewSession: () => Promise.resolve(),
 }));
 ```
 

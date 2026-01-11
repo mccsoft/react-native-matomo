@@ -311,4 +311,31 @@ class ReactNativeMatomo: NSObject {
         
         resolve(nil)
     }
+    
+    @objc(getUserId:withResolver:withRejecter:)
+    func getUserId(
+        instanceId: String,
+        resolve: RCTPromiseResolveBlock,
+        reject: RCTPromiseRejectBlock) -> Void
+    {
+        guard let tracker = trackers[instanceId] else {
+            reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
+            return
+        }
+        resolve(tracker.userId)
+    }
+    
+    @objc(startNewSession:withResolver:withRejecter:)
+    func startNewSession(
+        instanceId: String,
+        resolve: RCTPromiseResolveBlock,
+        reject: RCTPromiseRejectBlock) -> Void
+    {
+        guard let tracker = trackers[instanceId] else {
+            reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
+            return
+        }
+        tracker.startNewSession()
+        resolve(nil)
+    }
 }

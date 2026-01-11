@@ -254,6 +254,21 @@ export class MatomoTracker {
   async resetCustomDimensions(): Promise<void> {
     return ReactNativeMatomo.resetCustomDimensions(this.instanceId);
   }
+
+  /**
+   * Get the current user ID
+   * @returns The user ID or null if not set
+   */
+  async getUserId(): Promise<string | null> {
+    return ReactNativeMatomo.getUserId(this.instanceId);
+  }
+
+  /**
+   * Start a new session for the next tracking event
+   */
+  async startNewSession(): Promise<void> {
+    return ReactNativeMatomo.startNewSession(this.instanceId);
+  }
 }
 
 // ============================================================================
@@ -408,6 +423,22 @@ export function stop(options?: MatomoStopOptions): Promise<void> {
   return defaultTracker.stop(options);
 }
 
+/**
+ * Get user ID from the default tracker
+ * @deprecated Use MatomoTracker class for new implementations
+ */
+export function getUserId(): Promise<string | null> {
+  return defaultTracker.getUserId();
+}
+
+/**
+ * Start a new session on the default tracker
+ * @deprecated Use MatomoTracker class for new implementations
+ */
+export function startNewSession(): Promise<void> {
+  return defaultTracker.startNewSession();
+}
+
 // Export the class
 export { MatomoTracker as Matomo };
 
@@ -434,4 +465,6 @@ export default {
   reset,
   resetCustomDimensions,
   stop,
+  getUserId,
+  startNewSession,
 };

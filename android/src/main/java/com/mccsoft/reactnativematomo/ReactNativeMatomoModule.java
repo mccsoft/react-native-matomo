@@ -27,13 +27,13 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   private static final String DEFAULT_INSTANCE_ID = "default";
   
   /** Map of tracker instances by instance ID */
-  private Map<String, Tracker> trackers = new HashMap<>();
+  private static Map<String, Tracker> trackers = new HashMap<>();
   
   /**
    * Custom dimensions per instance. These custom dimensions will get added to every tracking event.
    * This is how Matomo iOS SDK works.
    */
-  private Map<String, Map<Integer, String>> customDimensionsMap = new HashMap<>();
+  private static Map<String, Map<Integer, String>> customDimensionsMap = new HashMap<>();
 
   public static final String NAME = "ReactNativeMatomo";
 

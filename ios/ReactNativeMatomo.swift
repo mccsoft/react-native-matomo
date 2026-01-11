@@ -8,10 +8,10 @@ class ReactNativeMatomo: NSObject {
     private static let DEFAULT_INSTANCE_ID = "default"
     
     /// Dictionary to store multiple tracker instances
-    private var trackers: [String: MatomoTracker] = [:]
+    private static var trackers: [String: MatomoTracker] = [:]
     
     /// Dictionary to store custom dimensions per instance
-    private var customDimensions: [String: [Int: String]] = [:]
+    private static var customDimensions: [String: [Int: String]] = [:]
     
     /// Generate a unique cache key for an instance
     private func cacheKey(for instanceId: String, siteId: String) -> String {
@@ -45,8 +45,8 @@ class ReactNativeMatomo: NSObject {
             newTracker = MatomoTracker(siteId: siteId, baseURL: baseUrl!)
         }
         
-        trackers[instanceId] = newTracker
-        customDimensions[instanceId] = [:]
+        ReactNativeMatomo.trackers[instanceId] = newTracker
+        ReactNativeMatomo.customDimensions[instanceId] = [:]
         
         resolve(nil)
     }
@@ -57,7 +57,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        resolve(trackers[instanceId] != nil)
+        resolve(ReactNativeMatomo.trackers[instanceId] != nil)
     }
 
     @objc(setUserId:withUserID:withResolver:withRejecter:)
@@ -67,7 +67,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -83,20 +83,20 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
 
         if let unwrappedValue = value {
             tracker.setDimension(unwrappedValue, forIndex: index.intValue)
-            if customDimensions[instanceId] == nil {
-                customDimensions[instanceId] = [:]
+            if ReactNativeMatomo.customDimensions[instanceId] == nil {
+                ReactNativeMatomo.customDimensions[instanceId] = [:]
             }
-            customDimensions[instanceId]?[index.intValue] = unwrappedValue
+            ReactNativeMatomo.customDimensions[instanceId]?[index.intValue] = unwrappedValue
         } else {
             tracker.remove(dimensionAtIndex: index.intValue)
-            customDimensions[instanceId]?.removeValue(forKey: index.intValue)
+            ReactNativeMatomo.customDimensions[instanceId]?.removeValue(forKey: index.intValue)
         }
         
         resolve(nil)
@@ -110,7 +110,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized. TrackView failed", nil)
             return
         }
@@ -135,7 +135,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -153,7 +153,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -182,7 +182,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -196,7 +196,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -211,7 +211,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -225,7 +225,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -241,7 +241,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock)
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -256,7 +256,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -272,8 +272,8 @@ class ReactNativeMatomo: NSObject {
         tracker.dispatchInterval = 0
         
         // Only remove this specific instance from our dictionaries
-        trackers.removeValue(forKey: instanceId)
-        customDimensions.removeValue(forKey: instanceId)
+        ReactNativeMatomo.trackers.removeValue(forKey: instanceId)
+        ReactNativeMatomo.customDimensions.removeValue(forKey: instanceId)
         
         resolve(nil)
     }
@@ -284,7 +284,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -300,18 +300,18 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
         
         // Remove all custom dimensions
-        if let dimensions = customDimensions[instanceId] {
+        if let dimensions = ReactNativeMatomo.customDimensions[instanceId] {
             for index in dimensions.keys {
                 tracker.remove(dimensionAtIndex: index)
             }
         }
-        customDimensions[instanceId] = [:]
+        ReactNativeMatomo.customDimensions[instanceId] = [:]
         
         resolve(nil)
     }
@@ -322,7 +322,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }
@@ -335,7 +335,7 @@ class ReactNativeMatomo: NSObject {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
-        guard let tracker = trackers[instanceId] else {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
             reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
             return
         }

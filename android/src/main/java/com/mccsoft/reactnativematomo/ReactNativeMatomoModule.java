@@ -255,6 +255,13 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
           tracker.dispatch();
         }
         
+        // Opt out to prevent any further event processing
+        tracker.setOptOut(true);
+        
+        // Set dispatch interval to 0 to prevent new dispatch timers
+        tracker.setDispatchInterval(0);
+        
+        // Only remove this specific instance from our maps
         trackers.remove(instanceId);
         customDimensionsMap.remove(instanceId);
         

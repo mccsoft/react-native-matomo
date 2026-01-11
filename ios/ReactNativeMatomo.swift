@@ -265,6 +265,13 @@ class ReactNativeMatomo: NSObject {
             tracker.dispatch()
         }
         
+        // Opt out to prevent any further event processing
+        tracker.isOptedOut = true
+        
+        // Set dispatch interval to 0 to prevent new dispatch timers from starting
+        tracker.dispatchInterval = 0
+        
+        // Only remove this specific instance from our dictionaries
         trackers.removeValue(forKey: instanceId)
         customDimensions.removeValue(forKey: instanceId)
         

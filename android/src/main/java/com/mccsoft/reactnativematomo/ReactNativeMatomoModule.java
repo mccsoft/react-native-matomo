@@ -273,7 +273,7 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
       Tracker tracker = trackers.get(instanceId);
       if (tracker != null) {
         // Reset user ID
-        tracker.setUserId(null);
+        tracker.reset();
         promise.resolve(null);
       } else {
         promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");

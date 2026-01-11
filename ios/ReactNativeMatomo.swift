@@ -282,10 +282,7 @@ class ReactNativeMatomo: NSObject {
             return
         }
         
-        // Reset user ID by setting it to nil (generates new visitor ID)
-        tracker.userId = nil
-        // Reset the visitor ID by creating a new one
-        tracker.forcedVisitorId = nil
+        tracker.reset()
         
         resolve(nil)
     }

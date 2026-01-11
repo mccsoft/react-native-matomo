@@ -13,7 +13,7 @@ Matomo wrapper for React-Native. Supports Android and iOS. Fixed issues for nati
   - tvOS: 13.0 and later (using `react-native-tvos`)
   - Android SDK: 21 and later
 - Supports Matomo SDK:
-  - Android: 4.4
+  - Android: 4.3
   - iOS/tvOS: 7.8.0
 
 After that you can install it as usual.

@@ -22,17 +22,17 @@ class ReactNativeMatomo: NSObject {
         return "\(instanceId)_\(siteId)"
     }
     
-    @objc(initialize:withUrl:withId:withCachedQueue:withResolver:withRejecter:)
+    @objc(initialize:withUrl:withSiteId:withCachedQueue:withResolver:withRejecter:)
     func initialize(
         instanceId: String,
         url: String,
-        id: NSNumber,
+        siteIdNumber: NSNumber,
         cachedQueue: Bool,
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void
     {
         let baseUrl = URL(string: url)
-        let siteId = id.stringValue
+        let siteId = siteIdNumber.stringValue
         let cacheIdentifier = cacheKey(for: instanceId, siteId: siteId)
         
         var newTracker: MatomoTracker

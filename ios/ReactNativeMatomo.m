@@ -8,7 +8,7 @@
 
 RCT_EXTERN_METHOD(initialize:(NSString* _Nonnull)instanceId
                   withUrl:(NSString* _Nonnull)url
-                  withId:(NSNumber* _Nonnull)id
+                  withSiteId:(NSNumber* _Nonnull)siteIdNumber
                   withCachedQueue:(BOOL _Nonnull)cachedQueue
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)

@@ -190,8 +190,8 @@ class ReactNativeMatomo: NSObject {
         resolve(nil)
     }
 
-    @objc(getAppOptOut:withResolver:withRejecter:)
-    func getAppOptOut(
+    @objc(isOptOut:withResolver:withRejecter:)
+    func isOptOut(
         instanceId: String,
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock) -> Void

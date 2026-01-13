@@ -52,7 +52,7 @@ RCT_EXTERN_METHOD(setAppOptOut:(NSString* _Nonnull)instanceId
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject);
 
-RCT_EXTERN_METHOD(getAppOptOut:(NSString* _Nonnull)instanceId
+RCT_EXTERN_METHOD(isOptOut:(NSString* _Nonnull)instanceId
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject);
 

@@ -155,7 +155,7 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getAppOptOut(String instanceId, Promise promise) {
+  public void isOptOut(String instanceId, Promise promise) {
     try {
       Tracker tracker = trackers.get(instanceId);
       if (tracker != null) {

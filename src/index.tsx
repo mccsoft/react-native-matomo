@@ -184,6 +184,14 @@ export class MatomoTracker {
   }
 
   /**
+   * Get the current app opt-out status
+   * @returns Whether the app is currently opted out of tracking
+   */
+  async getAppOptOut(): Promise<boolean> {
+    return ReactNativeMatomo.getAppOptOut(this.instanceId);
+  }
+
+  /**
    * Manually dispatch queued events
    */
   async dispatch(): Promise<void> {
@@ -439,6 +447,14 @@ export function startNewSession(): Promise<void> {
   return defaultTracker.startNewSession();
 }
 
+/**
+ * Get app opt-out status from the default tracker
+ * @deprecated Use MatomoTracker class for new implementations
+ */
+export function getAppOptOut(): Promise<boolean> {
+  return defaultTracker.getAppOptOut();
+}
+
 // Export the class
 export { MatomoTracker as Matomo };
 
@@ -467,4 +483,5 @@ export default {
   stop,
   getUserId,
   startNewSession,
+  getAppOptOut,
 };

@@ -155,6 +155,20 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void getAppOptOut(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        promise.resolve(tracker.isOptOut());
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
   public void setUserId(String instanceId, String userId, Promise promise) {
     try {
       Tracker tracker = trackers.get(instanceId);

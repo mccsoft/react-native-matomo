@@ -190,6 +190,19 @@ class ReactNativeMatomo: NSObject {
         resolve(nil)
     }
 
+    @objc(getAppOptOut:withResolver:withRejecter:)
+    func getAppOptOut(
+        instanceId: String,
+        resolve: RCTPromiseResolveBlock,
+        reject: RCTPromiseRejectBlock) -> Void
+    {
+        guard let tracker = ReactNativeMatomo.trackers[instanceId] else {
+            reject("not_initialized", "Matomo instance '\(instanceId)' not initialized", nil)
+            return
+        }
+        resolve(tracker.isOptedOut)
+    }
+
     @objc(dispatch:withResolver:withRejecter:)
     func dispatch(
         instanceId: String,

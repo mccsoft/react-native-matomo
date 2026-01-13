@@ -253,6 +253,14 @@ The MatomoTracker SDK supports opting out of tracking. Note that this flag must 
 await tracker.setAppOptOut(true);
 ```
 
+#### Get App Opt Out
+
+Check the current opt-out status:
+
+```javascript
+const isOptedOut = await tracker.getAppOptOut();
+```
+
 #### Dispatch Events Manually
 
 Sometimes there is a need to dispatch events manually:
@@ -500,6 +508,7 @@ jest.mock('@mccsoft/react-native-matomo', () => ({
   stop: () => Promise.resolve(),
   getUserId: () => Promise.resolve(null),
   startNewSession: () => Promise.resolve(),
+  getAppOptOut: () => Promise.resolve(true),
 }));
 ```
 

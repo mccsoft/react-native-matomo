@@ -89,11 +89,7 @@ export class MatomoTracker {
         !!cachedQueue
       );
     }
-    return ReactNativeMatomo.initialize(
-      this.instanceId,
-      normalizedUrl,
-      siteId
-    );
+    return ReactNativeMatomo.initialize(this.instanceId, normalizedUrl, siteId);
   }
 
   /**
@@ -204,9 +200,7 @@ export class MatomoTracker {
    */
   async setDispatchInterval(seconds: number): Promise<void> {
     if (typeof seconds !== 'number' || seconds <= 0) {
-      throw new Error(
-        'Invalid interval. The value must be a positive number.'
-      );
+      throw new Error('Invalid interval. The value must be a positive number.');
     }
     return ReactNativeMatomo.setDispatchInterval(this.instanceId, seconds);
   }

@@ -23,17 +23,21 @@ import java.util.concurrent.TimeUnit;
 
 @ReactModule(name = ReactNativeMatomoModule.NAME)
 public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
-  private Tracker tracker;
+  /** Default instance ID for backward compatibility */
+  private static final String DEFAULT_INSTANCE_ID = "default";
+  
+  /** Map of tracker instances by instance ID */
+  private static Map<String, Tracker> trackers = new HashMap<>();
+  
   /**
-   * These custom dimensions will get added to every tracking event. This
-   * is how Matomo iOS SDK works.
+   * Custom dimensions per instance. These custom dimensions will get added to every tracking event.
+   * This is how Matomo iOS SDK works.
    */
-  private Map<Integer, String> mCustomDimensions = new HashMap<>();
+  private static Map<String, Map<Integer, String>> customDimensionsMap = new HashMap<>();
 
   public static final String NAME = "ReactNativeMatomo";
 
   public ReactNativeMatomoModule(ReactApplicationContext reactContext) {
-
     super(reactContext);
   }
 
@@ -43,17 +47,29 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
     return NAME;
   }
 
-
   @ReactMethod
-  public void initialize(String apiUrl, int siteId, Promise promise) {
+  public void initialize(String instanceId, String apiUrl, int siteId, Promise promise) {
     try {
-      if (tracker == null) {
-        tracker = TrackerBuilder
-          .createDefault(apiUrl, siteId)
-          .build(Matomo.getInstance(getReactApplicationContext()));
+      Tracker existingTracker = trackers.get(instanceId);
+      if (existingTracker == null) {
+        TrackerBuilder builder;
+        
+        // For default instance, use createDefault for backward compatibility
+        // For other instances, use custom tracker name
+        if (DEFAULT_INSTANCE_ID.equals(instanceId)) {
+          builder = TrackerBuilder.createDefault(apiUrl, siteId);
+        } else {
+          builder = new TrackerBuilder(apiUrl, siteId, instanceId);
+        }
+        
+        Tracker newTracker = builder.build(Matomo.getInstance(getReactApplicationContext()));
 
-        Tracker.Callback callback = ReactNativeMatomoModule.this::onTrackCallback;
-        tracker.addTrackingCallback(callback);
+        final String finalInstanceId = instanceId;
+        Tracker.Callback callback = trackMe -> onTrackCallback(finalInstanceId, trackMe);
+        newTracker.addTrackingCallback(callback);
+        
+        trackers.put(instanceId, newTracker);
+        customDimensionsMap.put(instanceId, new HashMap<>());
       }
 
       promise.resolve(null);
@@ -63,19 +79,19 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void isInitialized(final Promise promise) {
+  public void isInitialized(String instanceId, final Promise promise) {
     try {
-      promise.resolve(tracker != null);
+      promise.resolve(trackers.get(instanceId) != null);
     } catch (Exception e) {
       promise.reject(e);
     }
   }
 
   @ReactMethod
-  public void trackView(String route, @Nullable String title, Promise promise) {
+  public void trackView(String instanceId, String route, @Nullable String title, Promise promise) {
     try {
       String actualTitle = title == null ? route : title;
-      getTrackHelper().screen(route).title(actualTitle).with(tracker);
+      getTrackHelper(instanceId).screen(route).title(actualTitle).with(getTracker(instanceId));
 
       promise.resolve(null);
     } catch (Exception e) {
@@ -84,9 +100,9 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void trackEvent(String category, String action, ReadableMap optionalParameters, Promise promise) {
+  public void trackEvent(String instanceId, String category, String action, ReadableMap optionalParameters, Promise promise) {
     try {
-      TrackHelper.EventBuilder event = getTrackHelper().event(category, action);
+      TrackHelper.EventBuilder event = getTrackHelper(instanceId).event(category, action);
       if (optionalParameters.hasKey("name")) {
         event.name(optionalParameters.getString("name"));
       }
@@ -97,7 +113,7 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
         event.path(optionalParameters.getString("url"));
       }
 
-      event.with(tracker);
+      event.with(getTracker(instanceId));
 
       promise.resolve(null);
     } catch (Exception e) {
@@ -106,48 +122,80 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void trackGoal(int goalId, ReadableMap values) {
+  public void trackGoal(String instanceId, int goalId, ReadableMap values) {
     Float revenue = null;
     if (values.hasKey("revenue") && !values.isNull("revenue")) {
       revenue = (float) values.getDouble("revenue");
     }
 
-    getTrackHelper().goal(goalId).revenue(revenue).with(tracker);
+    getTrackHelper(instanceId).goal(goalId).revenue(revenue).with(getTracker(instanceId));
   }
 
   @ReactMethod
-  public void trackAppDownload() {
-    getTrackHelper().download().with(tracker);
-  }
-
-  @ReactMethod
-  public void setAppOptOut(Boolean isOptedOut, Promise promise) {
-    try {
-      tracker.setOptOut(isOptedOut);
-
-      promise.resolve(null);
-    } catch (Exception e) {
-      promise.reject(e);
+  public void trackAppDownload(String instanceId) {
+    Tracker tracker = trackers.get(instanceId);
+    if (tracker != null) {
+      getTrackHelper(instanceId).download().with(tracker);
     }
   }
 
   @ReactMethod
-  public void setUserId(String userId, Promise promise) {
+  public void setAppOptOut(String instanceId, Boolean isOptedOut, Promise promise) {
     try {
-      tracker.setUserId(userId);
-      promise.resolve(null);
-    } catch (Exception e) {
-      promise.reject(e);
-    }
-  }
-
-  @ReactMethod
-  public void setCustomDimension(int dimensionId, @Nullable String value, Promise promise) {
-    try {
-      if (value != null && value.length() > 0) {
-        mCustomDimensions.put(dimensionId, value);
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        tracker.setOptOut(isOptedOut);
+        promise.resolve(null);
       } else {
-        mCustomDimensions.remove(dimensionId);
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void isOptOut(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        promise.resolve(tracker.isOptOut());
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void setUserId(String instanceId, String userId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        tracker.setUserId(userId);
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void setCustomDimension(String instanceId, int dimensionId, @Nullable String value, Promise promise) {
+    try {
+      Map<Integer, String> dimensions = customDimensionsMap.get(instanceId);
+      if (dimensions == null) {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+        return;
+      }
+      
+      if (value != null && value.length() > 0) {
+        dimensions.put(dimensionId, value);
+      } else {
+        dimensions.remove(dimensionId);
       }
 
       promise.resolve(null);
@@ -157,24 +205,29 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void dispatch(Promise promise) {
+  public void dispatch(String instanceId, Promise promise) {
     try {
-      tracker.dispatch();
-
-      promise.resolve(null);
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        tracker.dispatch();
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
     } catch (Exception e) {
       promise.reject(e);
     }
   }
 
   @ReactMethod
-  public void setDispatchInterval(int seconds, Promise promise) {
+  public void setDispatchInterval(String instanceId, int seconds, Promise promise) {
     try {
+      Tracker tracker = trackers.get(instanceId);
       if (tracker != null) {
         tracker.setDispatchInterval(TimeUnit.SECONDS.toMillis(seconds));
         promise.resolve(null);
       } else {
-        promise.reject("not_initialized", "Matomo not initialized");
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
       }
     } catch (Exception e) {
       promise.reject(e);
@@ -182,14 +235,15 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getDispatchInterval(Promise promise) {
+  public void getDispatchInterval(String instanceId, Promise promise) {
     try {
+      Tracker tracker = trackers.get(instanceId);
       if (tracker != null) {
         long intervalMillis = tracker.getDispatchInterval();
         int intervalSeconds = (int) TimeUnit.MILLISECONDS.toSeconds(intervalMillis);
         promise.resolve(intervalSeconds);
       } else {
-        promise.reject("not_initialized", "Matomo not initialized");
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
       }
     } catch (Exception e) {
       promise.reject(e);
@@ -197,32 +251,132 @@ public class ReactNativeMatomoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void trackSiteSearch(String query, @Nullable String category, @Nullable Integer resultCount, Promise promise) {
+  public void trackSiteSearch(String instanceId, String query, @Nullable String category, @Nullable Integer resultCount, Promise promise) {
     try {
-      getTrackHelper().search(query).category(category).count(resultCount).with(tracker);
+      getTrackHelper(instanceId).search(query).category(category).count(resultCount).with(getTracker(instanceId));
       promise.resolve(null);
     } catch (Exception e) {
       promise.reject(e);
     }
   }
 
-  private TrackHelper getTrackHelper() {
-    if (tracker == null) {
-      throw new RuntimeException("Tracker must be initialized before usage");
+  @ReactMethod
+  public void stop(String instanceId, Boolean dispatchRemaining, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        if (dispatchRemaining) {
+          tracker.dispatch();
+        }
+        
+        // Opt out to prevent any further event processing
+        tracker.setOptOut(true);
+        
+        // Set dispatch interval to 0 to prevent new dispatch timers
+        tracker.setDispatchInterval(0);
+        
+        // Only remove this specific instance from our maps
+        trackers.remove(instanceId);
+        customDimensionsMap.remove(instanceId);
+        
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
     }
+  }
+
+  @ReactMethod
+  public void reset(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        // Reset user ID
+        tracker.reset();
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void resetCustomDimensions(String instanceId, Promise promise) {
+    try {
+      Map<Integer, String> dimensions = customDimensionsMap.get(instanceId);
+      if (dimensions != null) {
+        dimensions.clear();
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void getUserId(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        promise.resolve(tracker.getUserId());
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void startNewSession(String instanceId, Promise promise) {
+    try {
+      Tracker tracker = trackers.get(instanceId);
+      if (tracker != null) {
+        tracker.startNewSession();
+        promise.resolve(null);
+      } else {
+        promise.reject("not_initialized", "Matomo instance '" + instanceId + "' not initialized");
+      }
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
+  private Tracker getTracker(String instanceId) {
+    Tracker tracker = trackers.get(instanceId);
+    if (tracker == null) {
+      throw new RuntimeException("Matomo instance '" + instanceId + "' must be initialized before usage");
+    }
+    return tracker;
+  }
+
+  private TrackHelper getTrackHelper(String instanceId) {
+    Tracker tracker = getTracker(instanceId);
+    Map<Integer, String> dimensions = customDimensionsMap.get(instanceId);
+    
     TrackHelper trackHelper = TrackHelper.track();
-    for (Map.Entry<Integer, String> entry : mCustomDimensions.entrySet()) {
-      trackHelper = trackHelper.dimension(entry.getKey(), entry.getValue());
+    if (dimensions != null) {
+      for (Map.Entry<Integer, String> entry : dimensions.entrySet()) {
+        trackHelper = trackHelper.dimension(entry.getKey(), entry.getValue());
+      }
     }
     return trackHelper;
   }
 
-  private TrackMe onTrackCallback(TrackMe trackMe) {
-    for (Map.Entry<Integer, String> dim : mCustomDimensions.entrySet()) {
-      CustomDimension dimension = new CustomDimension(dim.getKey(), dim.getValue());
-      CustomDimension.setDimension(trackMe, dimension);
+  private TrackMe onTrackCallback(String instanceId, TrackMe trackMe) {
+    Map<Integer, String> dimensions = customDimensionsMap.get(instanceId);
+    if (dimensions != null) {
+      for (Map.Entry<Integer, String> dim : dimensions.entrySet()) {
+        CustomDimension dimension = new CustomDimension(dim.getKey(), dim.getValue());
+        CustomDimension.setDimension(trackMe, dimension);
+      }
     }
-
     return trackMe;
   }
 }
